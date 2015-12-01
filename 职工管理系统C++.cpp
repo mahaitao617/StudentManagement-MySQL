@@ -9,14 +9,14 @@
 using namespace std;
 class DB_worker {
 private:
-    char column[20][30];	//´æ´¢ÊôĞÔÃû³Æ
+    char column[20][30];	//å­˜å‚¨å±æ€§åç§°
     FILE *fplog;
-    char info[10][50];		//ÁÙÊ±´æ·Åµ±Ç°¼üÈëµÄÊôĞÔÖµ
-    MYSQL mysql, *sock;		//mysqlÁ¬½Ó
-    MYSQL_RES *res;			//Õâ¸ö½á¹¹´ú±í·µ»ØĞĞµÄÒ»¸ö²éÑ¯½á¹û¼¯
-    int num_fields;			//½á¹û¼¯ÖĞµÄÁĞÊı
-    char query[1024];		//²éÑ¯Óï¾ä
-    char tableName[20];		//±íÃû
+    char info[10][50];		//ä¸´æ—¶å­˜æ”¾å½“å‰é”®å…¥çš„å±æ€§å€¼
+    MYSQL mysql, *sock;		//mysqlè¿æ¥
+    MYSQL_RES *res;			//è¿™ä¸ªç»“æ„ä»£è¡¨è¿”å›è¡Œçš„ä¸€ä¸ªæŸ¥è¯¢ç»“æœé›†
+    int num_fields;			//ç»“æœé›†ä¸­çš„åˆ—æ•°
+    char query[1024];		//æŸ¥è¯¢è¯­å¥
+    char tableName[20];		//è¡¨å
 
     bool QueryDatabase(const char*s=0,int show=1,const char* todo="select *",int saveToFile=0);
     bool ConnectDatabase();
@@ -40,17 +40,17 @@ int main() {
     workers.Choose();
     return 0;
 }
-//¹¹Ôìº¯ÊıÖĞÁ¬½ÓÊı¾İ¿â
+//æ„é€ å‡½æ•°ä¸­è¿æ¥æ•°æ®åº“
 DB_worker::DB_worker(const char*tb) {
     fplog = fopen("log.txt","a+");
     strcpy(tableName,tb);
     if(!ConnectDatabase()) {
-        cout<<"Êı¾İ¿âÁ¬½ÓÊ§°Ü,Çë¼ì²éÁ¬½ÓºóÖØÊÔ£¡"<<endl;
+        cout<<"æ•°æ®åº“è¿æ¥å¤±è´¥,è¯·æ£€æŸ¥è¿æ¥åé‡è¯•ï¼"<<endl;
         system("pause");
         exit(-1);
     }
 }
-//ÊÍ·ÅÁ¬½ÓºÍÆäËû×ÊÔ´
+//é‡Šæ”¾è¿æ¥å’Œå…¶ä»–èµ„æº
 DB_worker::~DB_worker() {
     mysql_free_result(res);
     mysql_close(sock);
@@ -61,14 +61,14 @@ void DB_worker::Choose() {
     while(c!='0') {
     	ShowAll(1);
         for(int j=0;j<65;j++)
-			cout<<"¡î";
+			cout<<"â˜†";
 		cout<<endl;
-        cout<<"\t\t\t\t\t\t\t1.ĞÂÔöÒ»ÃûÖ°¹¤\n\t\t\t\t\t\t\t2.É¾³ıÒ»ÃûÖ°¹¤\n\t\t\t\t\t\t\t3.²éÕÒ"
-			<<"\n\t\t\t\t\t\t\t4.ĞŞ¸Ä\n\t\t\t\t\t\t\t5.ÅÅĞò\n\t\t\t\t\t\t\t6.ÏÔÊ¾ËùÓĞ\n\t\t\t\t\t\t\t0.ÍË³ö"<<endl;
+        cout<<"\t\t\t\t\t\t\t1.æ–°å¢ä¸€åèŒå·¥\n\t\t\t\t\t\t\t2.åˆ é™¤ä¸€åèŒå·¥\n\t\t\t\t\t\t\t3.æŸ¥æ‰¾"
+			<<"\n\t\t\t\t\t\t\t4.ä¿®æ”¹\n\t\t\t\t\t\t\t5.æ’åº\n\t\t\t\t\t\t\t6.æ˜¾ç¤ºæ‰€æœ‰\n\t\t\t\t\t\t\t0.é€€å‡º"<<endl;
         for(int j=0;j<65;j++)
-			cout<<"¡î";
+			cout<<"â˜†";
 		cout<<endl;
-        cout<<endl<<"ÇëÑ¡Ôñ: ";
+        cout<<endl<<"è¯·é€‰æ‹©: ";
         do {
             c=getche();
             cout<<"\r\t\t\t\r"<<c<<":";
@@ -94,7 +94,7 @@ void DB_worker::Choose() {
             case '0':
                 break;
             default:
-                cout<<"\rÊäÈë´íÎó£¬ÇëÖØĞÂÊäÈë:";
+                cout<<"\rè¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥:";
             }
         } while(c<'0' || c>'6');
         cout<<endl;
@@ -104,57 +104,57 @@ void DB_worker::Choose() {
 }
 void DB_worker::Add() {
     sprintf(query, "insert into %s values ('",tableName);
-    cout<<"ÇëÊäÈë "<<column[0]<<": ";
+    cout<<"è¯·è¾“å…¥ "<<column[0]<<": ";
     cin>>info[0];
     strcat(query,info[0]);
     for(int i=1; i<num_fields; i++) {
-        cout<<"ÇëÊäÈë "<<column[i]<<": ";
+        cout<<"è¯·è¾“å…¥ "<<column[i]<<": ";
         cin>>info[i];
         strcat(query,"','");
         strcat(query,info[i]);
     }
     strcat(query,"')");
 	printDateTime(fplog);
-    if(mysql_query(sock, query)) {      //Ö´ĞĞSQLÓï¾ä
-        printf("Ìí¼ÓÊ§°Ü (%s)\n",mysql_error(sock));
-        fprintf(fplog,"Error: %s (%s)\n",query,mysql_error(sock));		//Ôö¼ÓÈÕÖ¾
+    if(mysql_query(sock, query)) {      //æ‰§è¡ŒSQLè¯­å¥
+        printf("æ·»åŠ å¤±è´¥ (%s)\n",mysql_error(sock));
+        fprintf(fplog,"Error: %s (%s)\n",query,mysql_error(sock));		//å¢åŠ æ—¥å¿—
     } else{
-        puts("Ìí¼Ó³É¹¦");
-        fprintf(fplog,"%s\n",query);		//Ôö¼ÓÈÕÖ¾
+        puts("æ·»åŠ æˆåŠŸ");
+        fprintf(fplog,"%s\n",query);		//å¢åŠ æ—¥å¿—
     }
 }
 void DB_worker::Delete() {
     char temp[128];
-    cout<<"ÇëÊäÈëĞèÒªÉ¾³ıµÄ"<<column[0]<<": ";
+    cout<<"è¯·è¾“å…¥éœ€è¦åˆ é™¤çš„"<<column[0]<<": ";
     cin>>info[0];
     sprintf(temp,"where %s='%s'",column[0],info[0]);
-    if(QueryDatabase(temp)) {      //Ö´ĞĞSQLÓï¾ä
-        cout<<"È·¶¨É¾³ı¸ÃÔª×é£¿(1»òyÈ·ÈÏ):";
+    if(QueryDatabase(temp)) {      //æ‰§è¡ŒSQLè¯­å¥
+        cout<<"ç¡®å®šåˆ é™¤è¯¥å…ƒç»„ï¼Ÿ(1æˆ–yç¡®è®¤):";
         char c=getch();
         if(c=='1' || c=='y' || c=='Y'){
 			printDateTime(fplog);
             if(QueryDatabase(temp,1,"delete")) {
-                puts("É¾³ı³É¹¦");
-                fprintf(fplog,"%s\n",query);		//Ôö¼ÓÈÕÖ¾
+                puts("åˆ é™¤æˆåŠŸ");
+                fprintf(fplog,"%s\n",query);		//å¢åŠ æ—¥å¿—
             } else {
-                printf("É¾³ıÊ§°Ü (%s)\n",mysql_error(sock));
-                fprintf(fplog,"Error: %s (%s)\n",query,mysql_error(sock));		//Ôö¼ÓÈÕÖ¾
+                printf("åˆ é™¤å¤±è´¥ (%s)\n",mysql_error(sock));
+                fprintf(fplog,"Error: %s (%s)\n",query,mysql_error(sock));		//å¢åŠ æ—¥å¿—
             }
         }else
-			cout<<"ÒÑÈ¡ÏûÉ¾³ı"<<endl;
+			cout<<"å·²å–æ¶ˆåˆ é™¤"<<endl;
     } else {
 		printDateTime(fplog);
-        puts("É¾³ıÊ§°Ü (¸ÃÔª×é²»´æÔÚ)");
-        fprintf(fplog,"Error: %s : ¸ÃÔª×é²»´æÔÚ\n",query);		//Ôö¼ÓÈÕÖ¾
+        puts("åˆ é™¤å¤±è´¥ (è¯¥å…ƒç»„ä¸å­˜åœ¨)");
+        fprintf(fplog,"Error: %s : è¯¥å…ƒç»„ä¸å­˜åœ¨\n",query);		//å¢åŠ æ—¥å¿—
     }
 }
 void DB_worker::Search() {
-    cout<<"ÇëÑ¡Ôñ²éÕÒ·½Ê½:\n";
+    cout<<"è¯·é€‰æ‹©æŸ¥æ‰¾æ–¹å¼:\n";
     for(int i=0; i<num_fields; i++)
         cout<<i+1<<"."<<column[i]<<"  ";
     char c=getch();
     if(c>48 && c<49+num_fields) {
-        cout<<"\nÇëÊäÈëĞèÒª²éÕÒµÄ"<<column[c-49]<<": ";
+        cout<<"\nè¯·è¾“å…¥éœ€è¦æŸ¥æ‰¾çš„"<<column[c-49]<<": ";
         cin>>info[0];
         char temp[128];
         sprintf(temp,"where %s='%s'",column[c-49],info[0]);
@@ -162,56 +162,56 @@ void DB_worker::Search() {
     }
 }
 void DB_worker::Modify() {
-    cout<<"ÇëÑ¡ÔñĞèÒªĞŞ¸ÄÔª×éµÄÏŞÖÆÊôĞÔ:\n";
+    cout<<"è¯·é€‰æ‹©éœ€è¦ä¿®æ”¹å…ƒç»„çš„é™åˆ¶å±æ€§:\n";
     for(int i=0; i<num_fields; i++)
         cout<<i+1<<"."<<column[i]<<"  ";
     char c=getch();
     char temp[128];
     if(c>48 && c<49+num_fields) {
-        cout<<"\r\t\t\t\t\t\t\t\t\t\t\rÇëÊäÈëÏŞÖÆÔª×éµÄ"<<column[c-49]<<": ";
+        cout<<"\r\t\t\t\t\t\t\t\t\t\t\rè¯·è¾“å…¥é™åˆ¶å…ƒç»„çš„"<<column[c-49]<<": ";
         cin>>info[0];
         sprintf(temp,"where %s='%s'",column[c-49],info[0]);
         if(QueryDatabase(temp)) {
-            cout<<"ÇëÑ¡ÔñĞèÒªĞŞ¸ÄµÄÊôĞÔ:\n";
+            cout<<"è¯·é€‰æ‹©éœ€è¦ä¿®æ”¹çš„å±æ€§:\n";
             for(int i=0; i<num_fields; i++)
                 cout<<i+1<<"."<<column[i]<<"  ";
             char c=getch();
             if(c>48 && c<49+num_fields) {
-                cout<<"\r\t\t\t\t\t\t\t\t\t\t\rÇëÊäÈëĞÂµÄ"<<column[c-49]<<": ";
+                cout<<"\r\t\t\t\t\t\t\t\t\t\t\rè¯·è¾“å…¥æ–°çš„"<<column[c-49]<<": ";
                 cin>>info[0];
                 sprintf(query, "update %s set %s='%s' %s",tableName,column[c-49],info[0],temp);
 				printDateTime(fplog);
-                if(mysql_query(sock, query)) {      //Ö´ĞĞSQLÓï¾ä
-                    printf("ĞŞ¸ÄÊ§°Ü (%s)\n",mysql_error(sock));
-                    fprintf(fplog,"Error: %s (%s)\n",query,mysql_error(sock));	//Ôö¼ÓÈÕÖ¾
+                if(mysql_query(sock, query)) {      //æ‰§è¡ŒSQLè¯­å¥
+                    printf("ä¿®æ”¹å¤±è´¥ (%s)\n",mysql_error(sock));
+                    fprintf(fplog,"Error: %s (%s)\n",query,mysql_error(sock));	//å¢åŠ æ—¥å¿—
                 } else {
-                    puts("ĞŞ¸Ä³É¹¦");
-                    fprintf(fplog,"%s\n",query);	//Ôö¼ÓÈÕÖ¾
+                    puts("ä¿®æ”¹æˆåŠŸ");
+                    fprintf(fplog,"%s\n",query);	//å¢åŠ æ—¥å¿—
                 }
             }
         }else
-			cout<<"Î´ËÑË÷µ½¿ÉĞŞ¸ÄÏî£¬½¨Òé¸ü¸ÄĞŞ¸ÄÏŞÖÆÊôĞÔ"<<endl;
+			cout<<"æœªæœç´¢åˆ°å¯ä¿®æ”¹é¡¹ï¼Œå»ºè®®æ›´æ”¹ä¿®æ”¹é™åˆ¶å±æ€§"<<endl;
     }
 }
 void DB_worker::Sort() {
-    cout<<"ÇëÑ¡ÔñÅÅĞò·½Ê½:\n";
+    cout<<"è¯·é€‰æ‹©æ’åºæ–¹å¼:\n";
     for(int i=0; i<num_fields; i++)
         cout<<i+1<<"."<<column[i]<<"  ";
     char c=getch();
     if(c>48 && c<49+num_fields) {
         char temp[128], way[5]="asc";
-        cout<<"\r\t\t\t\t\t\t\t\t\t\t\t\rÒÔ"<<column[c-49]
-			<<"½µĞòÅÅĞòÇë°´1»òy,°´qÈ¡ÏûÅÅĞò,ÆäËû¼ü½«°´ÉıĞòÅÅĞò: ";
+        cout<<"\r\t\t\t\t\t\t\t\t\t\t\t\rä»¥"<<column[c-49]
+			<<"é™åºæ’åºè¯·æŒ‰1æˆ–y,æŒ‰qå–æ¶ˆæ’åº,å…¶ä»–é”®å°†æŒ‰å‡åºæ’åº: ";
         char c2=getch();
-        cout<<"\r\t\t\t\t\t\t\t\r°´"<<column[c-49];
+        cout<<"\r\t\t\t\t\t\t\t\ræŒ‰"<<column[c-49];
         if(c2=='q' || c2=='Q'){
-        	cout<<"\r\t\t\t\t\t\t\t\rÒÑÈ¡ÏûÅÅĞò"<<endl;
+        	cout<<"\r\t\t\t\t\t\t\t\rå·²å–æ¶ˆæ’åº"<<endl;
 			return;
         }else if(c2=='1' || c2=='y' || c2=='Y'){
             strcpy(way,"desc");
-            cout<<"½µĞòÅÅĞò"<<endl;
+            cout<<"é™åºæ’åº"<<endl;
         }else
-			cout<<"ÉıĞòÅÅĞò"<<endl;
+			cout<<"å‡åºæ’åº"<<endl;
         sprintf(temp,"order by %s %s",column[c-49],way);
         if(QueryDatabase(temp)){
 			printDateTime(fplog);
@@ -222,68 +222,68 @@ void DB_worker::Sort() {
 void DB_worker::ShowAll(int saveToFile) {
     QueryDatabase(0,1,"select *",saveToFile);
 }
-//Á¬½ÓÊı¾İ¿â
+//è¿æ¥æ•°æ®åº“
 bool DB_worker::ConnectDatabase() {
     int result = 1;
-    mysql_init(&mysql);  //³õÊ¼»¯mysql£¬Á¬½ÓÊı¾İ¿â
-	//ÎÒÃ»ÓĞÉèÖÃMySQLÃÜÂë,ËùÒÔ´Ë´¦ÃÜÂë×Ö¶ÎÎª¿Õ,¿ÉÒÔ¸ù¾İ¾ßÌå»·¾³ĞŞ¸Ä²ÎÊı
+    mysql_init(&mysql);  //åˆå§‹åŒ–mysqlï¼Œè¿æ¥æ•°æ®åº“
+	//æˆ‘æ²¡æœ‰è®¾ç½®MySQLå¯†ç ,æ‰€ä»¥æ­¤å¤„å¯†ç å­—æ®µä¸ºç©º,å¯ä»¥æ ¹æ®å…·ä½“ç¯å¢ƒä¿®æ”¹å‚æ•°
     if (!(sock = mysql_real_connect(&mysql,"localhost", "root", "", "test",0,NULL,0))) {
         printf( "Error connecting to database:%s\n",mysql_error(&mysql));
         result = 0;
     } else {
         printf("Connected successful\n");
-		int timeout =  2;                      //³¬Ê±Ê±¼äÉèÖÃÎª3Ãë
+		int timeout =  2;                      //è®¾ç½®æŸ¥è¯¢è¶…æ—¶æ—¶é•¿
 		if(sock != NULL) {
-			//ÉèÖÃÁ´½Ó³¬Ê±Ê±¼ä.
+			//è®¾ç½®é“¾æ¥è¶…æ—¶æ—¶é—´.
 			mysql_options(sock,MYSQL_OPT_CONNECT_TIMEOUT,(const char *)&timeout);
-			//ÉèÖÃ²éÑ¯Êı¾İ¿â(select)³¬Ê±Ê±¼ä
+			//è®¾ç½®æŸ¥è¯¢æ•°æ®åº“(select)è¶…æ—¶æ—¶é—´
 			mysql_options(sock,MYSQL_OPT_READ_TIMEOUT,(const char *)&timeout);
-			//ÉèÖÃĞ´Êı¾İ¿â(update,delect,insert,replaceµÈ)µÄ³¬Ê±Ê±¼ä¡£
+			//è®¾ç½®å†™æ•°æ®åº“(update,delect,insert,replaceç­‰)çš„è¶…æ—¶æ—¶é—´ã€‚
 			mysql_options(sock,MYSQL_OPT_WRITE_TIMEOUT,(const char *)&timeout);
 		}
-        mysql_query(sock,"set names 'GBK'");//ÉèÖÃ×Ö·û¼¯£¬·ÀÖ¹ÖĞÎÄÎŞ·¨Õı³£ÏÔÊ¾
+        mysql_query(sock,"set names 'GBK'");//è®¾ç½®å­—ç¬¦é›†ï¼Œé˜²æ­¢ä¸­æ–‡æ— æ³•æ­£å¸¸æ˜¾ç¤º
         sprintf(query, "select * from %s ",tableName);
         mysql_query(sock, query);
         res = mysql_store_result(sock);
         num_fields = mysql_num_fields(res);
-        //»ñÈ¡×Ö¶ÎµÄĞÅÏ¢
+        //è·å–å­—æ®µçš„ä¿¡æ¯
         for(int i=0; i<num_fields; i++)
             strcpy(column[i], mysql_fetch_field(res)->name);
         puts("");
     }
-    puts("¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª\n");
+    puts("â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”\n");
     return result;
 }
-//½¨Á¢²éÑ¯
+//å»ºç«‹æŸ¥è¯¢
 bool DB_worker::QueryDatabase(const char*s,int show,const char* todo,int saveToFile) {
     sprintf(query, "%s from %s ",todo,tableName);
-    if(s)	// Á¬½ÓÉÏÌõ¼şÓï¾ä
+    if(s)	// è¿æ¥ä¸Šæ¡ä»¶è¯­å¥
         strcat(query,s);
-    if(mysql_query(sock, query)) {      //Ö´ĞĞSQLÓï¾ä
+    if(mysql_query(sock, query)) {      //æ‰§è¡ŒSQLè¯­å¥
         printf("Query failed (%s)\n",mysql_error(sock));
         return 0;
     } else if(strcmp(todo,"delete")==0)
         return 1;
-    //»ñÈ¡½á¹û¼¯
-    if (!(res=mysql_store_result(sock))) {  //»ñµÃsqlÓï¾ä½áÊøºó·µ»ØµÄ½á¹û¼¯
+    //è·å–ç»“æœé›†
+    if (!(res=mysql_store_result(sock))) {  //è·å¾—sqlè¯­å¥ç»“æŸåè¿”å›çš„ç»“æœé›†
         printf("Couldn't get result from %s\n", mysql_error(sock));
         return 0;
     }
-    //´òÓ¡½á¹ûÊı
+    //æ‰“å°ç»“æœæ•°
     int affect = mysql_affected_rows(sock);
     if(show) {
 		if(!saveToFile)
-			printf(">>>Ö°¹¤±íÖĞ¡ª¡ª¡ª¡ª¹²²éÑ¯µ½ %d ×é½á¹û<<<\n",affect);
-        //»ñÈ¡×Ö¶ÎµÄĞÅÏ¢
+			printf(">>>èŒå·¥è¡¨ä¸­â€”â€”â€”â€”å…±æŸ¥è¯¢åˆ° %d ç»„ç»“æœ<<<\n",affect);
+        //è·å–å­—æ®µçš„ä¿¡æ¯
         if(affect>0) {
         	if(saveToFile)
 				freopen("data.txt","w",stdout);
             for(int i=0; i<num_fields; i++)
                 printf("%-*s",130/num_fields,column[i]);
             puts("");
-            //´òÓ¡»ñÈ¡µÄÊı¾İ
-            MYSQL_ROW row; //Ò»¸öĞĞÊı¾İµÄÀàĞÍ°²È«(type-safe)µÄ±íÊ¾
-            while (row = mysql_fetch_row(res)) {    //»ñÈ¡ÏÂÒ»ĞĞ
+            //æ‰“å°è·å–çš„æ•°æ®
+            MYSQL_ROW row; //ä¸€ä¸ªè¡Œæ•°æ®çš„ç±»å‹å®‰å…¨(type-safe)çš„è¡¨ç¤º
+            while (row = mysql_fetch_row(res)) {    //è·å–ä¸‹ä¸€è¡Œ
                 for(int i=0; i<num_fields; i++)
                     printf("%-*s",130/num_fields,row[i]);
                 puts("");
@@ -294,10 +294,10 @@ bool DB_worker::QueryDatabase(const char*s,int show,const char* todo,int saveToF
         	}
         }
     }
-    puts("¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª\n");
+    puts("â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”\n");
     return affect;
 }
-//ÔÚÈÕÖ¾ÎÄ¼şÖĞ´òÓ¡µ±Ç°ÈÕÆÚºÍÊ±¼ä
+//åœ¨æ—¥å¿—æ–‡ä»¶ä¸­æ‰“å°å½“å‰æ—¥æœŸå’Œæ—¶é—´
 void DB_worker::printDateTime(FILE * fp) {
     time_t now_time=time(NULL);
     struct tm *newtime=localtime(&now_time);
