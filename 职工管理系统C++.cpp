@@ -226,6 +226,7 @@ void DB_worker::ShowAll(int saveToFile) {
 bool DB_worker::ConnectDatabase() {
     int result = 1;
     mysql_init(&mysql);  //初始化mysql，连接数据库
+	//我没有设置MySQL密码,所以此处密码字段为空,可以根据具体环境修改参数
     if (!(sock = mysql_real_connect(&mysql,"localhost", "root", "", "test",0,NULL,0))) {
         printf( "Error connecting to database:%s\n",mysql_error(&mysql));
         result = 0;
