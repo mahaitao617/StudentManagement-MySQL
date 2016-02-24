@@ -1,0 +1,5 @@
+1 安装32位mysql然后把libmysql.dll复制到C:/Windows/system32/下面并运行【安装位置\MySQL Server 5.6\bin】
+ 目录下的mysqld.exe,注意每次使用前需要让这个后台运行。
+2 把测试程序中的对应的密码和用户名修改
+3打开vs2010“视图”下面的“属性管理器”，打开工程属性，选中“VC++目录”编辑“包含目录”为“....\MySQL Server 5.5\include”，
+ 库目录为“.....、MySQL Server 5.5\lib”即可。
