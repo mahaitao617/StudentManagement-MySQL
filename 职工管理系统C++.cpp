@@ -57,7 +57,7 @@ DB_worker::~DB_worker() {
     fclose(fplog);
 }
 void DB_worker::Choose() {
-    char c;
+    char c='a';
     while(c!='0') {
     	ShowAll(1);
         for(int j=0;j<65;j++)
@@ -245,11 +245,14 @@ bool DB_worker::ConnectDatabase() {
         sprintf(query, "select * from %s ",tableName);
         mysql_query(sock, query);
         res = mysql_store_result(sock);
+        if(res!=NULL)
+        {
         num_fields = mysql_num_fields(res);
         //获取字段的信息
         for(int i=0; i<num_fields; i++)
             strcpy(column[i], mysql_fetch_field(res)->name);
         puts("");
+        }
     }
     puts("————————————————————\n");
     return result;
